@@ -14,7 +14,7 @@ import socket
 import sys
 import tempfile
 from collections import OrderedDict, namedtuple
-from urllib.parse import urlparse, ResultMixin, parse_qs
+from urlparse import urlparse, ResultMixin, parse_qs
 from argparse import ArgumentParser
 from SimpleAciUiLogServer import (SimpleAciUiLogServer,
                                   ThreadingSimpleAciUiLogServer,
@@ -173,7 +173,7 @@ def convert_dn_to_cobra(dn_str):
         dn_dict[rn_str]['parentMoOrDn'] = parent_mo_or_dn
         parent_mo_or_dn = rname.meta.moClassName
     cobra_str = ""
-    for arn in list(dn_dict.items()):
+    for arn in dn_dict.items():
         if len(arn[1]['namingVals']) > 0:
             nvals = [str(val) for val in arn[1]['namingVals']]
             nvals_str = ", '" + ", ".join(nvals) + "'"
@@ -206,8 +206,8 @@ def parse_apic_options_string(options):
     qstring = ''
     if options is None or options == '':
         return qstring
-    for opt, value in list(parse_qs(options).items()):
-        if opt in list(dictmap.keys()):
+    for opt, value in parse_qs(options).items():
+        if opt in dictmap.keys():
             val_str = value[0].replace('"', '\"')
             qstring += '    query.{0} = "{1}"\n'.format(dictmap[opt], val_str)
         else:
@@ -341,7 +341,7 @@ def start_server(args):
                 os.unlink(cert)
             except OSError:  # pylint:disable=pointless-except
                 pass
-        print("Exiting...")
+        print "Exiting..."
         sys.exit(0)
 
     http_server = None
@@ -378,8 +378,8 @@ def start_server(args):
         cert_file.write(SERVER_CERT)
         cert_file.close()
         cert = cert_file.name
-        print(("\n+++WARNING+++ Using an embedded self-signed certificate " +
-              "for HTTPS, this is not secure.\n"))
+        print("\n+++WARNING+++ Using an embedded self-signed certificate " +
+              "for HTTPS, this is not secure.\n")
     else:
         cert = args.cert
 
@@ -417,21 +417,21 @@ def start_server(args):
                                        socket.SOCK_DGRAM)]][0][1]
     print("serving at:")  # pylint:disable=C0325
     if http_server:
-        print(("http://{0}:{1}{2}".format(str(ip_addr), str(args.port),
-                                         str(args.location))))
+        print("http://{0}:{1}{2}".format(str(ip_addr), str(args.port),
+                                         str(args.location)))
     if https_server:
-        print(("https://{0}:{1}{2}".format(str(ip_addr), str(args.sslport),
-                                          str(args.location))))
+        print("https://{0}:{1}{2}".format(str(ip_addr), str(args.sslport),
+                                          str(args.location)))
 
     print("")  # pylint:disable=C0325
-    print(("Make sure your APIC(s) are configured to send log messages: " +
-          "welcome username -> Start Remote Logging"))
+    print("Make sure your APIC(s) are configured to send log messages: " +
+          "welcome username -> Start Remote Logging")
     if args.single_server == 'http':
-        print(("Note: If you connect to the APIC GUI via HTTPS, you need to " +
-              "start and use the HTTPS server."))
+        print("Note: If you connect to the APIC GUI via HTTPS, you need to " +
+              "start and use the HTTPS server.")
     elif args.single_server is None:
-        print(("Note: If you connect to your APIC via HTTPS, configure the " +
-              "remote logging to use the https server."))
+        print("Note: If you connect to your APIC via HTTPS, configure the " +
+              "remote logging to use the https server.")
     print("")
 
     if http_server and https_server:
